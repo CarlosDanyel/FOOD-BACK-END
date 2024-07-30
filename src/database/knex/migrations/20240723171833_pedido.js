@@ -7,6 +7,7 @@ exports.up = (knex) =>
     table.text("categoria");
     table.text("ImagemPedido");
     table.integer("user_id").references("id").inTable("users");
+
     table.timestamp("created_at").default(knex.fn.now());
   });
 

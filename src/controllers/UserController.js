@@ -4,7 +4,6 @@ const sqliteConect = require("../database/sqlite");
 
 class UserController {
   async create(req, res) {
-    // Define Admin como false se não estiver presente
     const { name, email, password, Admin = false } = req.body;
 
     // Conexão ao banco de dados
@@ -39,13 +38,26 @@ class UserController {
       user_id,
     ]);
 
+    if (!user) {
+      throw new AppError("Usuário não encontrado");
+    }
+
     const userUpdateEmail = await database.get(
       "SELECT * FROM users WHERE email = (?)",
       [email]
     );
 
     if (userUpdateEmail && userUpdateEmail.id !== user.id) {
-      throw new AppError("Email ja em usu");
+      throw new AppError("Email ja em uso");
+    }
+
+    user.name = name ?? user.name;
+    user.email = email ?? user.email;
+
+    if (password && !old_password) {
+      throw new AppError(
+        "Você informar a senha antiga para definir a nova senha"
+      );
     }
 
     if (password && old_password) {
@@ -58,21 +70,18 @@ class UserController {
       user.password = await hash(password, 8);
     }
 
-    user.name = name ?? user.name;
-    user.email = email ?? user.email;
-
     await database.run(
       `
       UPDATE users SET
       name = ?,
       email = ?,
       password = ?,
-      updated_at = DATETIME('now')
+      created_at = DATETIME('now')
       WHERE id = ?`,
       [user.name, user.email, user.password, user_id]
     );
 
-    return res.status(201).json({ name, email, password, old_password });
+    return res.json();
   }
 }
 
