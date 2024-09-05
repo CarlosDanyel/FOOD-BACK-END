@@ -41,8 +41,10 @@ class PedidoController {
 
   async delete(req, res) {
     const { id } = req.params;
-    await knex("pedido").where({ id }).delete();
+
     await knex("ingrediente_pedido").where({ pedido_id: id }).delete();
+
+    await knex("pedido").where({ id }).delete();
     return res.json();
   }
 
@@ -58,7 +60,7 @@ class PedidoController {
       categoria,
     });
 
-    await knex("ingrediente_pedido").where({ pedido_id: id }).delete();
+    // await knex("ingrediente_pedido").where({ pedido_id: id }).delete();
 
     const ingredientsInsert = ingredients.map((title) => ({
       pedido_id: id,
@@ -69,6 +71,38 @@ class PedidoController {
 
     return res.json({ message: "Pedido atualizado com sucesso" });
   }
+
+async index(req, res) {
+  const { title } = req.query;
+
+  let pedidos;
+
+  if (title) {
+    pedidos = await knex("pedido")
+      .where("title", "like", `%${title}%`)
+      .select("*");
+  } else {
+    pedidos = await knex("pedido").select("*");
+  }
+
+  const ingredientes = await knex("ingrediente_pedido").select("*");
+
+  const pedidosWithIngredientes = pedidos.map((pedido) => {
+    const pedidoIngredientes = ingredientes.filter(
+      (ingrediente) => ingrediente.pedido_id === pedido.id
+    );
+
+    return {
+      ...pedido,
+      ingredientes: pedidoIngredientes,
+    };
+  });
+
+  return res.json(pedidosWithIngredientes);
+}
+
+
+
 }
 
 module.exports = PedidoController;

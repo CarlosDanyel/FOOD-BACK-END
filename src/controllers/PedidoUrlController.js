@@ -4,22 +4,13 @@ const DiskStorage = require("../providers/DiskStorage");
 
 class PedidoUrlController {
   async update(request, response) {
-    const user_id = request.user.id;
+    const { id } = request.params; // Pega o ID do pedido da URL
     const pedidoFileName = request.file.filename;
 
     const diskStorage = new DiskStorage();
 
-    // Verifica se o usuário existe
-    const user = await knex("users").where({ id: user_id }).first();
-    if (!user) {
-      throw new AppError(
-        "Somente usuários autenticados podem mudar o avatar",
-        401
-      );
-    }
-
     // Verifica se o pedido existe
-    const pedido = await knex("pedido").where({ user_id }).first();
+    const pedido = await knex("pedido").where({ id }).first();
     if (!pedido) {
       throw new AppError("Pedido não encontrado", 404);
     }
@@ -34,10 +25,13 @@ class PedidoUrlController {
     pedido.ImagemPedido = filename;
 
     // Atualiza o pedido com a nova imagem
-    await knex("pedido").update({ ImagemPedido: filename }).where({ user_id });
+    await knex("pedido").update({ ImagemPedido: filename }).where({ id });
 
     return response.json(pedido);
   }
 }
+
+module.exports = PedidoUrlController;
+
 
 module.exports = PedidoUrlController;

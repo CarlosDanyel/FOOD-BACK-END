@@ -16,10 +16,11 @@ const upload = multer(uploadConfig.MULTER);
 
 pedidoRouter.post("/", pedidoController.create);
 pedidoRouter.get("/:id", pedidoController.show);
+pedidoRouter.get("/", pedidoController.index);
 pedidoRouter.delete("/:id", pedidoController.delete);
 pedidoRouter.put("/:id", pedidoController.update);
 pedidoRouter.patch(
-  "/urlImg",
+  "/:id/urlImg",
   upload.single("pedidoUrl"),
   pedidoUrlController.update
 );

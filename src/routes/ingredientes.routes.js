@@ -4,6 +4,6 @@ const IngredienteController = require("../controllers/IngredienteController");
 const ingredienteRouter = Router();
 const ingredienteController = new IngredienteController();
 
-ingredienteRouter.post("/", ingredienteController.index);
+ingredienteRouter.get("/", ingredienteController.index);
 
 module.exports = ingredienteRouter;
