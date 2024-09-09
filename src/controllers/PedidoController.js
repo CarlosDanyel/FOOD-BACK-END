@@ -1,30 +1,7 @@
 const knex = require("../database/knex");
+const DiskStorage = require("../providers/DiskStorage");
 
 class PedidoController {
-  async create(req, res) {
-    const { title, description, valor, categoria, ingredients } = req.body;
-    const user_id = req.user.id;
-
-    const [pedido_id] = await knex("pedido").insert({
-      title,
-      description,
-      valor,
-      categoria,
-      user_id,
-    });
-
-    const ingredientsInsert = ingredients.map((title) => {
-      return {
-        pedido_id,
-        title,
-      };
-    });
-
-    await knex("ingrediente_pedido").insert(ingredientsInsert);
-
-    return res.json();
-  }
-
   async show(req, res) {
     const { id } = req.params;
 
@@ -59,8 +36,6 @@ class PedidoController {
       valor,
       categoria,
     });
-
-    // await knex("ingrediente_pedido").where({ pedido_id: id }).delete();
 
     const ingredientsInsert = ingredients.map((title) => ({
       pedido_id: id,
@@ -100,8 +75,6 @@ async index(req, res) {
 
   return res.json(pedidosWithIngredientes);
 }
-
-
 
 }
 
