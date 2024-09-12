@@ -25,7 +25,7 @@ class PedidoController {
     return res.json();
   }
 
-  async update(req, res) {
+  async update(req, res) {  
     const { title, description, valor, categoria, ingredients } = req.body;
 
     const { id } = req.params;
@@ -47,34 +47,37 @@ class PedidoController {
     return res.json({ message: "Pedido atualizado com sucesso" });
   }
 
-async index(req, res) {
-  const { title } = req.query;
+  async index(req, res) {
+    const { title } = req.query;
 
-  let pedidos;
+    let pedidos;
 
-  if (title) {
-    pedidos = await knex("pedido")
-      .where("title", "like", `%${title}%`)
-      .select("*");
-  } else {
-    pedidos = await knex("pedido").select("*");
+    if (title) {
+      pedidos = await knex("pedido")
+        .leftJoin("ingrediente_pedido", "pedido.id", "ingrediente_pedido.pedido_id") 
+        .where("pedido.title", "like", `%${title}%`) 
+        .orWhere("ingrediente_pedido.title", "like", `%${title}%`)  
+        .groupBy("pedido.id")  
+        .select("pedido.*"); 
+    } else {
+      pedidos = await knex("pedido").select("*");
+    }
+
+    const ingredientes = await knex("ingrediente_pedido").select("*");
+
+    const pedidosWithIngredientes = pedidos.map((pedido) => {
+      const pedidoIngredientes = ingredientes.filter(
+        (ingrediente) => ingrediente.pedido_id === pedido.id
+      );
+
+      return {
+        ...pedido,
+        ingredientes: pedidoIngredientes,
+      };
+    });
+
+    return res.json(pedidosWithIngredientes);
   }
-
-  const ingredientes = await knex("ingrediente_pedido").select("*");
-
-  const pedidosWithIngredientes = pedidos.map((pedido) => {
-    const pedidoIngredientes = ingredientes.filter(
-      (ingrediente) => ingrediente.pedido_id === pedido.id
-    );
-
-    return {
-      ...pedido,
-      ingredientes: pedidoIngredientes,
-    };
-  });
-
-  return res.json(pedidosWithIngredientes);
-}
 
 }
 

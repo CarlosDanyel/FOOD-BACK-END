@@ -4,8 +4,8 @@ const DiskStorage = require("../providers/DiskStorage");
 
 class PedidoUrlController {
     async create(request, response) {
-
     const user_id = request.user.id;
+
     const { title, description, valor, categoria } = request.body;
     const ingredients = JSON.parse(request.body.ingredients);
     const pedidoFileName = request.file.filename; 
@@ -23,12 +23,10 @@ class PedidoUrlController {
       categoria,
     }).returning("id"); 
 
-    const pedido = await knex("pedido").where({ id: pedido_id }).first();
-
     const ingredientsInsert = ingredients.map((title) => {
       return {
-        pedido_id,
-        title,
+        pedido_id: pedido_id.id,
+        title
       };
     });
 
@@ -36,7 +34,6 @@ class PedidoUrlController {
 
     return response.json({
       message: "Pedido criado com sucesso e imagem associada.",
-      pedido
     });
   }
 
