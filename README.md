@@ -56,4 +56,4 @@ Para o desenvolvimento deste back-end utilizei as seguintes tecnologias:
 1. **Clone o Repositório:**
 
    ```bash
-   git clone https://github.com/seuusuario/food-explorer-backend.git
+   git clone https://github.com/CarlosDanyel/FOOD-BACK-END.git
