@@ -30,7 +30,7 @@ Este é o back-end do projeto "Food Explorer", desenvolvido como parte do desafi
 
 - **src:**
   - **controllers:** Contém os controladores responsáveis pelas operações CRUD.
-  - **models:** Definições dos modelos de dados e interações com o banco de dados.
+  - **database:** Definições dos modelos de dados e interações com o banco de dados.
   - **routes:** Definições das rotas da API.
   - **middlewares:** Funções intermediárias para autenticação e validação.
   - **config:** Configurações do banco de dados e outras configurações.
