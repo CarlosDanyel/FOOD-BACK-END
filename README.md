@@ -6,8 +6,8 @@
 
 Este é o back-end do projeto "Food Explorer", desenvolvido como parte do desafio Rocketseat Explorer. O back-end é responsável por gerenciar dados relacionados aos pratos, usuários e autenticação.
 
- - **USUARIO ADMIN: email: carlosdayel275@email**
- - **USUARIO ADMIN: senha: 123**
+- **USUARIO ADMIN: email: carlosdayel275@email**
+- **USUARIO ADMIN: senha: 123**
 ---
 
 ## 🚀 Funcionalidades
